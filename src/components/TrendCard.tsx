@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Star, MessageSquarePlus, Calendar, Building2 } from 'lucide-react';
+import { ExternalLink, Star, MessageSquarePlus, Calendar } from 'lucide-react';
 import { TrendCardItem } from '../types';
 
 interface TrendCardProps {
@@ -35,128 +35,101 @@ export const TrendCard: React.FC<TrendCardProps> = ({
     onUpdateMemo(item.id, val);
   };
 
-  const getCategoryBadgeClass = (category: string) => {
-    switch (category) {
-      case 'Space & Interior':
-        return 'bg-[#EFEFEA] text-[#3D3D38] border-[#D8D8CE]';
-      case 'Consumer':
-        return 'bg-[#EBF1F5] text-[#2C4454] border-[#D0DDE6]';
-      case 'Lifestyle':
-      default:
-        return 'bg-[#F2ECE4] text-[#4A3D31] border-[#DFD5C8]';
-    }
-  };
-
   return (
     <article
       id={`trend-card-${item.id}`}
-      className="bg-white rounded-xl border border-[#E0E0DB] overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow group"
+      className="bg-white border border-[#E5E5E5] flex flex-col justify-between hover:border-black transition-colors group"
     >
-      {/* 01 MAIN IMAGE */}
+      {/* 01 IMAGE HEADER */}
       <div>
-        <div className="relative aspect-16/10 sm:aspect-16/9 w-full bg-[#EAEAE5] overflow-hidden border-b border-[#EAEAE5]">
+        <div className="relative aspect-16/10 w-full bg-[#EEEEEE] overflow-hidden border-b border-[#E5E5E5]">
           <img
             src={item.mainImage}
             alt={item.title}
             loading="lazy"
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500"
+            className="w-full h-full object-cover object-center group-hover:scale-[1.015] transition-transform duration-500"
           />
 
-          {/* Signal Index Number Badge */}
-          <div className="absolute top-3 left-3 bg-[#1A1A1A]/85 backdrop-blur-xs text-white font-mono text-[11px] font-semibold px-2 py-0.5 rounded-sm">
+          {/* Signal Tag */}
+          <div className="absolute top-2.5 left-2.5 bg-black text-white font-mono text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
             SIGNAL 0{index + 1}
           </div>
 
-          {/* Scrap Button - Top Right of Image for clean alignment */}
+          {/* Scrap Button - Minimalist Architectural Save Button */}
           <button
             type="button"
             onClick={() => onToggleScrap(item)}
-            className={`absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-editorial-sans transition-all cursor-pointer backdrop-blur-md shadow-xs ${
+            className={`absolute top-2.5 right-2.5 flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-editorial-sans transition-all cursor-pointer border ${
               isScrapped
-                ? 'bg-[#1A1A1A] text-[#F3C044] font-semibold ring-1 ring-white/20'
-                : 'bg-white/90 text-[#404040] hover:bg-white hover:text-[#1A1A1A]'
+                ? 'bg-black text-white border-black font-semibold'
+                : 'bg-white/95 text-black border-black/20 hover:bg-white hover:border-black'
             }`}
           >
-            <Star className={`w-3.5 h-3.5 ${isScrapped ? 'fill-[#F3C044] text-[#F3C044]' : 'text-[#737373]'}`} />
-            <span className="text-[11px]">{isScrapped ? '★ SCRAPPED' : '☆ SCRAP'}</span>
+            <Star className={`w-3 h-3 ${isScrapped ? 'fill-[#F3C044] text-[#F3C044]' : 'text-black'}`} />
+            <span>{isScrapped ? 'SAVED' : 'SAVE'}</span>
           </button>
 
           {/* Image Attribution */}
           {item.imageSource && (
-            <div className="absolute bottom-2 right-2 max-w-[80%] text-[10px] text-white/90 font-mono bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded-sm truncate">
+            <div className="absolute bottom-2 right-2 max-w-[80%] text-[9px] text-white/90 font-mono bg-black/75 px-1.5 py-0.5 truncate">
               {item.imageSource}
             </div>
           )}
         </div>
 
-        {/* CONTENT BODY */}
-        <div className="p-5 sm:p-6 space-y-4">
-          {/* 02 TREND KEYWORD */}
-          <div>
-            <span className="text-[11px] font-mono tracking-widest text-[#787870] uppercase">
-              TREND KEYWORD
+        {/* 02 EDITORIAL CARD BODY */}
+        <div className="p-5 sm:p-6 space-y-3.5">
+          {/* Date & Keyword Meta Bar (matching magazine style) */}
+          <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-[#777777]">
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-[#999999]" />
+              <span>{item.source.publishedDate || '2026.09.11'}</span>
             </span>
-            <div className="text-base sm:text-lg font-editorial-sans font-bold text-[#1A1A1A] tracking-tight mt-0.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-black bg-[#F2F2F0] px-1.5 py-0.5">
               {item.trendKeyword}
-            </div>
+            </span>
           </div>
 
-          {/* 03 TITLE */}
-          <h3 className="text-base sm:text-lg font-editorial-serif font-bold text-[#1A1A1A] leading-snug">
+          {/* Title: High Contrast Architectural Sans Heading */}
+          <h3 className="text-base sm:text-lg font-editorial-display font-bold text-black leading-snug tracking-tight group-hover:text-[#333333] transition-colors">
             {item.title}
           </h3>
 
-          {/* 04 OVERVIEW */}
-          <p className="text-xs sm:text-sm text-[#474742] leading-relaxed font-editorial-sans font-normal whitespace-pre-line">
+          {/* Category & Source: Underlined style matching reference image */}
+          <div className="text-[11px] font-editorial-sans text-[#666666] flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="underline underline-offset-3 decoration-1 decoration-[#999999] text-[#222222] font-medium">
+              {item.category === 'Space & Interior' ? 'Architecture / Space' : item.category}
+            </span>
+            <span className="text-[#CCCCCC]">/</span>
+            <a
+              href={item.source.originalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 hover:text-black underline underline-offset-3 decoration-1 decoration-[#CCCCCC] hover:decoration-black transition-colors"
+            >
+              <span>{item.source.mediaOrBrand}</span>
+              <ExternalLink className="w-2.5 h-2.5 text-[#999999]" />
+            </a>
+          </div>
+
+          {/* Overview Body */}
+          <p className="text-xs sm:text-[13px] text-[#444444] leading-relaxed font-editorial-sans whitespace-pre-line pt-1">
             {item.overview}
           </p>
-
-          {/* 05 CATEGORY & 06 SOURCE */}
-          <div className="pt-3 border-t border-[#F0F0EB] flex flex-wrap items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2">
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-[11px] font-editorial-sans font-medium border ${getCategoryBadgeClass(
-                  item.category
-                )}`}
-              >
-                {item.category}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3 text-[11px] text-[#73736C] font-editorial-sans">
-              <span className="flex items-center gap-1">
-                <Building2 className="w-3 h-3 text-[#9E9E94]" />
-                {item.source.mediaOrBrand}
-              </span>
-              <span className="flex items-center gap-1 font-mono text-[#8C8C84]">
-                <Calendar className="w-3 h-3 text-[#9E9E94]" />
-                {item.source.publishedDate}
-              </span>
-              <a
-                href={item.source.originalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#1A1A1A] hover:underline underline-offset-2 font-medium"
-              >
-                <span>원문</span>
-                <ExternalLink className="w-3 h-3 text-[#787870]" />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* 07 MEMO SECTION (Inline personal thought editor) */}
+      {/* 03 RESEARCH MEMO SECTION */}
       <div className="p-5 sm:p-6 pt-0">
-        <div className="bg-[#FAF9F5] rounded-lg border border-[#EAEAE3] p-3.5 transition-colors">
+        <div className="border border-[#E5E5E5] bg-[#FAFAF8] p-3 transition-colors">
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-mono font-bold tracking-wider text-[#73736C] uppercase">
-                THINK · RESEARCH MEMO
+              <span className="text-[9px] font-mono font-bold tracking-widest text-[#777777] uppercase">
+                RESEARCH NOTE
               </span>
               {memoText && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#3D8F5C]" title="자동 저장됨" />
+                <span className="w-1.5 h-1.5 rounded-full bg-black" title="자동 저장됨" />
               )}
             </div>
 
@@ -164,10 +137,10 @@ export const TrendCard: React.FC<TrendCardProps> = ({
               <button
                 type="button"
                 onClick={() => setMemoOpen(true)}
-                className="text-[11px] font-editorial-sans text-[#52524E] hover:text-[#1A1A1A] flex items-center gap-1 cursor-pointer"
+                className="text-[11px] font-editorial-sans text-[#666666] hover:text-black flex items-center gap-1 cursor-pointer"
               >
                 <MessageSquarePlus className="w-3 h-3" />
-                <span>+ ADD MEMO</span>
+                <span>+ ADD NOTE</span>
               </button>
             )}
           </div>
@@ -177,21 +150,21 @@ export const TrendCard: React.FC<TrendCardProps> = ({
               <textarea
                 value={memoText}
                 onChange={handleMemoChange}
-                placeholder="아이디어나 생각을 기록하세요. (자동 저장됩니다)"
+                placeholder="아이디어, 시사점 또는 메모를 기록하세요. (자동 저장)"
                 rows={2}
-                className="w-full text-xs font-editorial-sans text-[#1A1A1A] bg-transparent border-0 focus:ring-0 focus:outline-none p-0 resize-none placeholder:text-[#999990] leading-relaxed"
+                className="w-full text-xs font-editorial-sans text-black bg-transparent border-0 focus:ring-0 focus:outline-none p-0 resize-none placeholder:text-[#999999] leading-relaxed"
               />
-              <div className="flex justify-between items-center text-[10px] text-[#A0A096] font-mono pt-1 border-t border-[#ECECE6]">
+              <div className="flex justify-between items-center text-[10px] text-[#888888] font-mono pt-1 border-t border-[#EBEBEB]">
                 <span>{memoText.length > 0 ? `${memoText.length}자` : '비어 있음'}</span>
-                <span>Auto-saved to localStorage</span>
+                <span>Auto-saved to Storage</span>
               </div>
             </div>
           ) : (
             <p
               onClick={() => setMemoOpen(true)}
-              className="text-xs font-editorial-sans text-[#8C8C84] cursor-pointer hover:text-[#52524E] py-1"
+              className="text-xs font-editorial-sans text-[#888888] cursor-pointer hover:text-black py-0.5"
             >
-              + 생각을 기록하려면 클릭하세요...
+              + 메모를 기록하려면 클릭하세요...
             </p>
           )}
         </div>

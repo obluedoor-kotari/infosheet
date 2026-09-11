@@ -142,7 +142,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBFBFA] text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-white text-black selection:bg-black selection:text-white">
       {/* Editorial Header */}
       <Header
         activeView={activeView}
@@ -157,7 +157,7 @@ export default function App() {
             {/* 01 DAILY TREND RADAR */}
             <DailyTrendRadar data={radarData} loading={radarLoading} />
 
-            {/* CATEGORY INPUT & BUTTON 01 (TODAY'S TREND 5) */}
+            {/* CATEGORY INPUT & FILTER BAR */}
             <CategorySelector
               selectedCategory={selectedCategory}
               onSelectCategory={(cat) => setSelectedCategory(cat)}
@@ -166,36 +166,40 @@ export default function App() {
             />
 
             {/* 02 TODAY'S TREND INFO — 5 SIGNALS */}
-            <section aria-label="Today's Trend Info Sheet" className="py-10 sm:py-12">
-              <div className="max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-5 border-b border-[#E8E8E3] mb-8">
+            <section aria-label="Today's Trend Info Sheet" className="py-8 sm:py-10 bg-white">
+              <div className="max-w-7xl mx-auto px-4 sm:px-8">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 border-b border-[#E5E5E5] mb-8">
                   <div>
                     <div className="flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-[#1A1A1A]" />
-                      <span className="text-xs font-mono font-bold tracking-widest text-[#73736C] uppercase">
+                      <span className="text-[11px] font-mono font-bold tracking-widest text-black uppercase">
                         CURATION · 02
                       </span>
+                      <span className="text-[#888888]">•</span>
+                      <span className="text-xs font-editorial-sans font-semibold uppercase text-black">
+                        EDITORIAL SELECTION
+                      </span>
                     </div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-editorial-serif font-bold text-[#1A1A1A] mt-1 tracking-tight">
-                      TODAY'S TREND INFO — 5 SIGNALS
+                    <h2 className="text-2xl sm:text-3xl font-editorial-display font-bold text-black mt-1 tracking-tight">
+                      TODAY'S 5 DESIGN SIGNALS
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#73736C] font-editorial-sans mt-1">
-                      AI가 오늘 디자인 트렌드 관점에서 확인할 가치가 있다고 판단한 핵심 이슈 5선
+                    <p className="text-xs sm:text-sm text-[#666666] font-editorial-sans mt-1">
+                      오늘 디자인 트렌드 관점에서 반드시 살펴볼 가치가 있는 5가지 선별 신호
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-[#8C8C84]">
-                      {trends.length} SIGNALS CURATED
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs font-mono text-[#888888]">
+                      0{trends.length} SIGNALS CURATED
                     </span>
                     <button
                       type="button"
                       onClick={() => generateTrends(selectedCategory)}
                       disabled={trendsLoading}
                       title="이슈 다시 선별하기"
-                      className="p-1.5 rounded-md hover:bg-[#EFEFED] text-[#73736C] hover:text-[#1A1A1A] transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E5E5E5] hover:border-black text-xs font-mono text-black transition-colors cursor-pointer"
                     >
-                      <RefreshCw className={`w-3.5 h-3.5 ${trendsLoading ? 'animate-spin' : ''}`} />
+                      <RefreshCw className={`w-3 h-3 ${trendsLoading ? 'animate-spin' : ''}`} />
+                      <span>REFRESH</span>
                     </button>
                   </div>
                 </div>
@@ -206,22 +210,22 @@ export default function App() {
                     {[1, 2, 3, 4, 5].map((idx) => (
                       <div
                         key={idx}
-                        className="bg-white rounded-xl border border-[#E0E0DB] p-6 space-y-4 animate-pulse"
+                        className="bg-white border border-[#E5E5E5] p-5 space-y-4 animate-pulse"
                       >
-                        <div className="aspect-16/9 bg-[#ECECE7] rounded-lg w-full" />
-                        <div className="h-4 bg-[#ECECE7] rounded-sm w-1/3" />
-                        <div className="h-6 bg-[#ECECE7] rounded-sm w-3/4" />
+                        <div className="aspect-16/10 bg-[#EEEEEE] w-full" />
+                        <div className="h-3 bg-[#EEEEEE] w-1/4" />
+                        <div className="h-6 bg-[#EEEEEE] w-3/4" />
                         <div className="space-y-2">
-                          <div className="h-3 bg-[#ECECE7] rounded-sm w-full" />
-                          <div className="h-3 bg-[#ECECE7] rounded-sm w-5/6" />
-                          <div className="h-3 bg-[#ECECE7] rounded-sm w-4/6" />
+                          <div className="h-3 bg-[#EEEEEE] w-full" />
+                          <div className="h-3 bg-[#EEEEEE] w-5/6" />
+                          <div className="h-3 bg-[#EEEEEE] w-4/6" />
                         </div>
-                        <div className="h-16 bg-[#FAF9F5] rounded-lg border border-[#EAEAE3]" />
+                        <div className="h-14 bg-[#FAFAFA] border border-[#EEEEEE]" />
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {trends.map((item, idx) => {
                       const isScrapped = scrappedTrends.some((s) => s.id === item.id);
                       const currentMemo = userMemos[item.id] || item.memo || '';
@@ -255,18 +259,95 @@ export default function App() {
         )}
       </main>
 
-      {/* Editorial Footer */}
-      <footer className="border-t border-[#E8E8E3] bg-[#F7F7F4] py-8 mt-12 text-center">
-        <div className="max-w-6xl mx-auto px-4">
-          <p className="font-editorial-serif text-sm sm:text-base italic text-[#52524E]">
-            "오늘의 트렌드 신호를 발견하고, 내 생각을 남기고, 필요한 것만 축적한다."
-          </p>
-          <div className="mt-3 flex items-center justify-center gap-3 text-[11px] font-mono text-[#8C8C84]">
-            <span>Daily Trend Info Sheet</span>
-            <span>·</span>
-            <span>For Design Trend Researchers</span>
-            <span>·</span>
-            <span>Local Persistent Storage</span>
+      {/* Magazine Editorial Footer (Referencing uploaded design) */}
+      <footer className="border-t border-[#E5E5E5] bg-white pt-12 pb-8 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          {/* Newsletter Box (like the reference footer) */}
+          <div className="border border-[#E5E5E5] p-8 sm:p-12 mb-12 text-center bg-[#FAFAF8]">
+            <span className="text-[10px] font-mono tracking-widest text-[#777777] uppercase">
+              • DAILY DISPATCH •
+            </span>
+            <h3 className="text-xl sm:text-2xl font-editorial-display font-bold text-black mt-2 tracking-tight">
+              Be up to date with the newest trend signals
+            </h3>
+            <p className="text-xs text-[#666666] font-editorial-sans mt-1.5 max-w-md mx-auto">
+              매일 갱신되는 구글 트렌드 검색 신호와 공간·디자인·라이프스타일 에디토리얼 요약
+            </p>
+            <div className="mt-5 flex max-w-sm mx-auto">
+              <input
+                type="email"
+                placeholder="Type your email..."
+                readOnly
+                value="researcher@trendsheet.io"
+                className="flex-1 px-3 py-2 text-xs font-editorial-sans border border-r-0 border-[#D5D5D5] bg-white text-[#777777] focus:outline-none"
+              />
+              <button
+                type="button"
+                className="px-5 py-2 bg-black text-white text-xs font-editorial-sans font-semibold tracking-wider hover:bg-[#222222] transition-colors"
+              >
+                SUBSCRIBE
+              </button>
+            </div>
+          </div>
+
+          {/* 4-Column Architectural Magazine Footer Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-[#E5E5E5] text-xs font-editorial-sans">
+            <div>
+              <div className="font-editorial-display font-extrabold text-base tracking-tight text-black">
+                TrendSheet®
+              </div>
+              <p className="text-[11px] text-[#777777] mt-2 leading-relaxed">
+                Daily Trend Info Sheet designed for trend researchers, architects, and product strategists.
+              </p>
+            </div>
+
+            <div>
+              <div className="font-mono font-bold text-[10px] tracking-widest text-[#888888] uppercase mb-2">
+                • RESEARCH DOMAINS
+              </div>
+              <ul className="space-y-1.5 text-[11px] text-[#555555]">
+                <li>Architecture & Spatial Experience</li>
+                <li>CMF & Product Design Trends</li>
+                <li>Cultural Anomalies & Lifestyle</li>
+                <li>Google Trends Search Acceleration</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-mono font-bold text-[10px] tracking-widest text-[#888888] uppercase mb-2">
+                • SOURCES & FEEDS
+              </div>
+              <ul className="space-y-1.5 text-[11px] text-[#555555]">
+                <li>Google Trends KR (Real-time)</li>
+                <li>Frame Magazine & Dezeen</li>
+                <li>Designboom & Monocle</li>
+                <li>WGSN & TrendWatching</li>
+              </ul>
+            </div>
+
+            <div>
+              <div className="font-mono font-bold text-[10px] tracking-widest text-[#888888] uppercase mb-2">
+                • NOTEBOOK ARCHIVE
+              </div>
+              <p className="text-[11px] text-[#555555] leading-relaxed">
+                Persistent personal research archive with instant research memo auto-save.
+              </p>
+              <div className="mt-2 text-[10px] font-mono text-[#888888]">
+                VERSION 2.4.0 · EDITORIAL EDITION
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Copyright */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] font-editorial-sans text-[#888888] gap-3">
+            <div>
+              © 2026 TrendSheet®. All rights reserved. Architectural Editorial System.
+            </div>
+            <div className="flex items-center gap-4 text-[10px] font-mono">
+              <span className="hover:text-black cursor-pointer">TERMS</span>
+              <span className="hover:text-black cursor-pointer">PRIVACY</span>
+              <span className="hover:text-black cursor-pointer">INDEX</span>
+            </div>
           </div>
         </div>
       </footer>

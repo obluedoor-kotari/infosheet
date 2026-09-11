@@ -9,68 +9,87 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeView, onViewChange, scrapCount }) => {
   const today = new Date();
-  const dateString = today.toLocaleDateString('ko-KR', {
+  const dateString = today.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
     year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    weekday: 'short',
   });
 
   return (
-    <header className="border-b border-[#E8E8E3] bg-[#FBFBFA]/90 backdrop-blur-md sticky top-0 z-30 transition-all">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-[#737373] mb-1 font-editorial-sans font-semibold">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#1A1A1A]"></span>
-              <span>Daily Trend Research Editor</span>
-              <span className="text-[#C4C4BD]">/</span>
-              <span>{dateString}</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-editorial-serif font-bold text-[#1A1A1A] tracking-tight">
-              Daily Trend Info Sheet
-            </h1>
-            <p className="text-xs sm:text-sm text-[#666660] mt-1 font-editorial-sans">
-              오늘의 트렌드 신호를 발견하고, 내 생각을 남기고, 필요한 것만 축적한다.
-            </p>
+    <header className="bg-white border-b border-[#E5E5E5] sticky top-0 z-40">
+      {/* 01 TOP UTILITY BAR (matching Laurits style top line) */}
+      <div className="border-b border-[#E5E5E5] px-4 sm:px-8 py-3 text-[11px] font-editorial-sans tracking-wide">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <span className="font-editorial-display font-bold text-sm tracking-tight text-black">
+              TrendSheet<sup>®</sup>
+            </span>
+            <nav className="hidden md:flex items-center gap-5 text-[#666666] text-xs">
+              <span className="hover:text-black transition-colors cursor-default">• SPACE</span>
+              <span className="hover:text-black transition-colors cursor-default">• DESIGN</span>
+              <span className="hover:text-black transition-colors cursor-default">• TREND</span>
+              <span className="hover:text-black transition-colors cursor-default">• RESEARCH</span>
+              <span className="hover:text-black transition-colors cursor-default">• ARCHIVE</span>
+            </nav>
           </div>
 
-          <div className="flex items-center gap-2 self-start md:self-end">
-            <div className="inline-flex p-1 rounded-lg bg-[#EFEFED] border border-[#E0E0DB]">
+          <div className="flex items-center gap-4 text-xs">
+            <span className="hidden sm:inline font-mono text-[11px] text-[#888888] tracking-wider uppercase">
+              {dateString}
+            </span>
+
+            {/* View Switcher: Architectural Tabs */}
+            <div className="inline-flex border border-[#111111]">
               <button
                 id="view-today-tab"
                 type="button"
                 onClick={() => onViewChange('TODAY')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-editorial-sans font-medium transition-colors cursor-pointer ${
                   activeView === 'TODAY'
-                    ? 'bg-white text-[#1A1A1A] shadow-xs font-semibold'
-                    : 'text-[#666660] hover:text-[#1A1A1A]'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black hover:bg-[#F5F5F5]'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3 h-3" />
                 <span>TODAY</span>
               </button>
               <button
                 id="view-scrap-tab"
                 type="button"
                 onClick={() => onViewChange('SCRAP')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-editorial-sans font-medium border-l border-[#111111] transition-colors cursor-pointer ${
                   activeView === 'SCRAP'
-                    ? 'bg-white text-[#1A1A1A] shadow-xs font-semibold'
-                    : 'text-[#666660] hover:text-[#1A1A1A]'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black hover:bg-[#F5F5F5]'
                 }`}
               >
-                <Bookmark className="w-3.5 h-3.5" />
+                <Bookmark className="w-3 h-3" />
                 <span>SCRAP</span>
                 {scrapCount > 0 && (
-                  <span className="ml-0.5 px-1.5 py-0.2 text-[10px] rounded-full bg-[#1A1A1A] text-white font-mono">
-                    {scrapCount}
+                  <span className={`text-[10px] px-1 font-mono ${activeView === 'SCRAP' ? 'text-[#F3C044]' : 'text-black font-bold'}`}>
+                    ({scrapCount})
                   </span>
                 )}
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 02 MONUMENTAL EDITORIAL MASTHEAD */}
+      <div className="px-4 sm:px-8 pt-6 pb-5 max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-1">
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] text-[#777777] uppercase">
+            DAILY TREND RESEARCH JOURNAL · VOL. 2026
+          </span>
+          <span className="hidden sm:inline text-[11px] font-editorial-sans text-[#777777]">
+            Curated daily signals for architects, product designers & trend strategists
+          </span>
+        </div>
+
+        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-magazine font-black text-black tracking-[-0.04em] uppercase leading-[0.9] select-none py-1">
+          MAGAZINE
+        </h1>
       </div>
     </header>
   );

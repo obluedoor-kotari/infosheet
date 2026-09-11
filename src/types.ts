@@ -2,11 +2,18 @@ export type TrendCategory = 'Consumer' | 'Lifestyle' | 'Space & Interior';
 
 export type CategoryFilter = 'ALL' | TrendCategory;
 
+export interface RelatedKeyword {
+  keyword: string;
+  reason: string; // Brief explanation for why each related keyword is relevant based on semantic similarity or common search patterns
+  searchUrl: string;
+}
+
 export interface RadarKeyword {
   keyword: string;
   volumeOrRate?: string; // e.g. "20K+ searches" or "50K+ · +400%" (strictly verified)
   whyTrending?: string; // Max 1 sentence, verified explanation
   searchUrl: string;
+  relatedKeywords?: RelatedKeyword[]; // 2-3 suggested related keywords
 }
 
 export interface RadarCategoryGroup {

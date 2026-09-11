@@ -3,16 +3,25 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    background-color: #FFFFFF;
+    color: #111111;
   }
+}
+
+/* Architectural Magazine Typography */
+.font-magazine {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.font-editorial-display {
+  font-family: 'Outfit', 'Syne', sans-serif;
+  letter-spacing: -0.025em;
 }
 
 .font-editorial-serif {
   font-family: 'Newsreader', 'Noto Serif KR', Georgia, serif;
-}
-
-.font-editorial-display {
-  font-family: 'Cinzel', 'Noto Serif KR', Georgia, serif;
 }
 
 .font-editorial-sans {
