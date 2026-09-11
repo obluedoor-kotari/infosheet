@@ -1,0 +1,6 @@
+{
+  "name": "Daily Trend Info Sheet",
+  "description": "디자인 트렌드 리서처를 위한 일일 트렌드 발굴 및 스크랩 에디터",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
