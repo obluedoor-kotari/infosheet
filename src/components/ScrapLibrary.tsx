@@ -10,6 +10,10 @@ interface ScrapLibraryProps {
   onSwitchToToday: () => void;
 }
 
+// Bulletproof zero-network SVG fallback for architectural trend visual
+const ARCHITECTURAL_FALLBACK_SVG =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="%23f4f4f4"/><path d="M100 400 L400 120 L700 400 Z" fill="none" stroke="%23cccccc" stroke-width="2"/><line x1="200" y1="400" x2="200" y2="260" stroke="%23cccccc" stroke-width="1.5"/><line x1="600" y1="400" x2="600" y2="260" stroke="%23cccccc" stroke-width="1.5"/><line x1="400" y1="120" x2="400" y2="400" stroke="%23bbbbbb" stroke-width="1.5"/><text x="400" y="440" font-family="monospace" font-size="12" fill="%23888888" text-anchor="middle" letter-spacing="2">ARCHITECTURAL SPATIAL ARCHIVE</text></svg>';
+
 export const ScrapLibrary: React.FC<ScrapLibraryProps> = ({
   scraps,
   userMemos,
@@ -96,6 +100,14 @@ export const ScrapLibrary: React.FC<ScrapLibraryProps> = ({
                       alt={item.title}
                       loading="lazy"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        if (!target.src.includes('photo-1600585154340')) {
+                          target.src = 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+                        } else {
+                          target.src = ARCHITECTURAL_FALLBACK_SVG;
+                        }
+                      }}
                       className="w-full h-full object-cover object-center"
                     />
 

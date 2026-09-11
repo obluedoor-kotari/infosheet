@@ -9,6 +9,11 @@ import {
   RadarData,
   TrendCardItem,
 } from './types';
+import {
+  fallbackSignals,
+  fallbackCategorySignals,
+  fallbackRadarData,
+} from './data/fallbackData';
 import { Sparkles, Layers, RefreshCw } from 'lucide-react';
 
 const STORAGE_SCRAPS_KEY = 'daily_trend_info_sheet_scraps';
@@ -18,10 +23,12 @@ export default function App() {
   const [activeView, setActiveView] = useState<'TODAY' | 'SCRAP'>('TODAY');
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('ALL');
 
-  const [radarData, setRadarData] = useState<RadarData | null>(null);
-  const [radarLoading, setRadarLoading] = useState<boolean>(true);
+  // Initialize with curated fallback radar data so content is visible instantly on GitHub Pages
+  const [radarData, setRadarData] = useState<RadarData>(fallbackRadarData);
+  const [radarLoading, setRadarLoading] = useState<boolean>(false);
 
-  const [trends, setTrends] = useState<TrendCardItem[]>([]);
+  // Initialize with curated 5 signals so images and text appear immediately even without a backend
+  const [trends, setTrends] = useState<TrendCardItem[]>(fallbackSignals);
   const [trendsLoading, setTrendsLoading] = useState<boolean>(false);
 
   // Local storage persisted state
@@ -63,46 +70,78 @@ export default function App() {
 
   // Load Radar data
   const loadRadar = useCallback(async () => {
-    setRadarLoading(true);
     try {
-      const res = await fetch('/api/radar');
-      if (res.ok) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+      const res = await fetch('/api/radar', { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
         const data: RadarData = await res.json();
-        setRadarData(data);
+        if (data && data.categories) {
+          setRadarData(data);
+        }
       }
     } catch (err) {
-      console.warn('Failed to load radar data:', err);
+      console.warn('Radar backend unreachable or timed out; maintaining curated radar:', err);
+      setRadarData(fallbackRadarData);
     } finally {
       setRadarLoading(false);
     }
   }, []);
 
   // Load or generate Today's 5 Trend signals
-  const generateTrends = useCallback(async (cat: CategoryFilter) => {
-    setTrendsLoading(true);
+  const generateTrends = useCallback(async (cat: CategoryFilter, showSkeleton: boolean = false) => {
+    if (showSkeleton) {
+      setTrendsLoading(true);
+    }
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
       const res = await fetch('/api/trends/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category: cat }),
+        signal: controller.signal,
       });
-      if (res.ok) {
+      clearTimeout(timeoutId);
+
+      const contentType = res.headers.get('content-type') || '';
+      if (res.ok && contentType.includes('application/json')) {
         const data = await res.json();
-        if (Array.isArray(data.trends)) {
+        if (Array.isArray(data.trends) && data.trends.length > 0) {
           setTrends(data.trends);
+          return;
         }
       }
+      // Fallback for static environments (Vercel, GitHub Pages, Netlify)
+      const fallback = fallbackCategorySignals[cat] || fallbackSignals;
+      setTrends(fallback);
     } catch (err) {
-      console.error('Failed to generate trends:', err);
+      console.warn('Trends backend unreachable or timed out; maintaining curated signals:', err);
+      const fallback = fallbackCategorySignals[cat] || fallbackSignals;
+      setTrends(fallback);
     } finally {
       setTrendsLoading(false);
     }
   }, []);
 
+  const handleCategoryChange = (cat: CategoryFilter) => {
+    setSelectedCategory(cat);
+    // Instantaneous update with curated category data so images and text never disappear
+    const instantCategoryData = fallbackCategorySignals[cat] || fallbackSignals;
+    setTrends(instantCategoryData);
+    // Attempt live refresh without blanking existing cards
+    generateTrends(cat, false);
+  };
+
   // Initial load
   useEffect(() => {
     loadRadar();
-    generateTrends('ALL');
+    generateTrends('ALL', false);
   }, [loadRadar, generateTrends]);
 
   // Update Memo
@@ -160,7 +199,7 @@ export default function App() {
             {/* CATEGORY INPUT & FILTER BAR */}
             <CategorySelector
               selectedCategory={selectedCategory}
-              onSelectCategory={(cat) => setSelectedCategory(cat)}
+              onSelectCategory={handleCategoryChange}
               onGenerate={() => generateTrends(selectedCategory)}
               loading={trendsLoading}
             />
@@ -193,7 +232,7 @@ export default function App() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => generateTrends(selectedCategory)}
+                      onClick={() => generateTrends(selectedCategory, true)}
                       disabled={trendsLoading}
                       title="이슈 다시 선별하기"
                       className="flex items-center gap-1.5 px-3 py-1.5 border border-[#E5E5E5] hover:border-black text-xs font-mono text-black transition-colors cursor-pointer"
@@ -205,7 +244,7 @@ export default function App() {
                 </div>
 
                 {/* 5 TREND CARDS */}
-                {trendsLoading ? (
+                {trendsLoading && trends.length === 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3, 4, 5].map((idx) => (
                       <div
